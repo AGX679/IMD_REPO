@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MoveScenes2D : MonoBehaviour {
 
 	[SerializeField] private string newLevel; 
-
+	//controls the actual transition between each level
 	void OnTriggerEnter2D(Collider2D other)  
 	{
 		if (other.CompareTag("Player"))

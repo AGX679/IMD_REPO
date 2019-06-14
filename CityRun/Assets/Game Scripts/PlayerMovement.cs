@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
 	void Awake()
 	{
+		//initialize
 		playerSprite = GetComponent<SpriteRenderer>();
 		rBody = GetComponent<Rigidbody2D>();
 		animator = GetComponent<Animator>();
@@ -25,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
 	void Update()
 	{
+		//controls and checking the ground
 		jumpInput = Input.GetAxis("Jump");
 		horizontalInput = Input.GetAxis("Horizontal");
 		var halfHeight = transform.GetComponent<SpriteRenderer>().bounds.extents.y;
@@ -41,10 +44,10 @@ public class PlayerMovement : MonoBehaviour
 			{
 				animator.SetBool("IsSwinging", true);
 
-				// fetch direction vector from player to hook
+				// find direction vector from player to hook
 				var playerToHookDirection = (ropeHook - (Vector2) transform.position).normalized;
 
-				// Inverse direction to get perendicular direction
+				// Inversed for perpendicular 
 				Vector2 perpendicularDirection;
 				if (horizontalInput < 0)
 				{
@@ -62,24 +65,24 @@ public class PlayerMovement : MonoBehaviour
 				var force = perpendicularDirection * swingForce;
 				rBody.AddForce(force, ForceMode2D.Force);
 			}
-			else
+			else //not swinging, so check if on the ground
 			{
 				animator.SetBool("IsSwinging", false);
 
 				if (groundCheck)
-				{
+				{  //momentum determination 
 					var groundForce = speed*2f;
 					rBody.AddForce(new Vector2((horizontalInput*groundForce - rBody.velocity.x)*groundForce, 0));
 					rBody.velocity = new Vector2(rBody.velocity.x, rBody.velocity.y);
 				}
 			}
 		}
-		else
-		{
+		else 
+		{  //stops 
 			animator.SetBool("IsSwinging", false);
 			animator.SetFloat("Speed", 0f);
 		}
-
+		// if not swinging, jump function
 		if (!isSwinging)
 		{
 			if (!groundCheck) return;
@@ -92,3 +95,4 @@ public class PlayerMovement : MonoBehaviour
 		}
 	}
 }
+

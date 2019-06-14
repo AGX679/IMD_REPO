@@ -23,7 +23,7 @@ public class RopeSystem : MonoBehaviour
 	private float ropeMaxCastDistance = 20f;
 	private Rigidbody2D ropeHingeAnchorRb;
 
-
+	//initialization
 	void Awake ()
 	{
 		ropeJoint.enabled = false;
@@ -47,15 +47,16 @@ public class RopeSystem : MonoBehaviour
 
 	// Update is called once per frame
 	void Update ()
-	{
+	{	//sets aiming position to the mouse position
 		var worldMousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
 		var facingDirection = worldMousePosition - transform.position;
+		//calculates angle and stores it
 		var aimAngle = Mathf.Atan2(facingDirection.y, facingDirection.x);
 		if (aimAngle < 0f)
 		{
 			aimAngle = Mathf.PI * 2 + aimAngle;
 		}
-
+		// calculates and stores the direction
 		var aimDirection = Quaternion.Euler(0, 0, aimAngle * Mathf.Rad2Deg) * Vector2.right;
 		playerPosition = transform.position;
 
@@ -69,7 +70,7 @@ public class RopeSystem : MonoBehaviour
 			playerMovement.isSwinging = true;
 			playerMovement.ropeHook = ropePositions.Last();
 			crosshairSprite.enabled = false;
-
+			//interaction with environment
 			if (ropePositions.Count > 0)
 			{
 				var lastRopePoint = ropePositions.Last();
@@ -92,7 +93,7 @@ public class RopeSystem : MonoBehaviour
 				}
 			}
 		}
-
+		//must run after every execution
 		UpdateRopePositions();
 		HandleRopeLength();
 		HandleInput(aimDirection);
@@ -100,7 +101,7 @@ public class RopeSystem : MonoBehaviour
 
 	private void HandleInput(Vector2 aimDirection)
 	{
-		if (Input.GetMouseButtonDown (0))
+		if (Input.GetMouseButtonDown (0)) //holding down left click fires grapple and activates sound
 			
 		{
 			Debug.Log ("Working");
@@ -131,14 +132,14 @@ public class RopeSystem : MonoBehaviour
 			}
 		}
 
-		if (Input.GetMouseButtonUp (0))
+		if (Input.GetMouseButtonUp (0)) //releases rope and resets grapple
 			
 		{
 			Debug.Log ("working"); 
 			ResetRope();
 		}
 	}
-
+	//complete reset
 	private void ResetRope()
 	{
 		ropeJoint.enabled = false;
@@ -178,7 +179,7 @@ public class RopeSystem : MonoBehaviour
 		}
 	}
 
-
+	//stores rope positions to prevent the player from rubberbanding and the rope from rendering
 	private void UpdateRopePositions()
 	{
 		if (ropeAttached)
@@ -191,7 +192,7 @@ public class RopeSystem : MonoBehaviour
 				{
 					ropeRenderer.SetPosition(i, ropePositions[i]);
 
-					// Set the rope anchor to the 2nd to last rope position (where the current hinge/anchor should be) or if only 1 rope position then set that one to anchor point
+
 					if (i == ropePositions.Count - 1 || ropePositions.Count == 1)
 					{
 						if (ropePositions.Count == 1)
@@ -204,7 +205,7 @@ public class RopeSystem : MonoBehaviour
 								distanceSet = true;
 							}
 						}
-						else
+						else 
 						{
 							var ropePosition = ropePositions[ropePositions.Count - 1];
 							ropeHingeAnchorRb.transform.position = ropePosition;
@@ -229,7 +230,7 @@ public class RopeSystem : MonoBehaviour
 				}
 				else
 				{
-					// Player position
+					// player
 					ropeRenderer.SetPosition(i, transform.position);
 				}
 			}
